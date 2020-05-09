@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital@1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital@1&family=Modak&display=swap");
+
+@media only screen and (max-width: 768px) {
+  #mediaToggle {
+    display: none !important;
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "Balsamiq Sans", cursive;
+  //background-image: url("img/candystore.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+header {
+  font-family: "Modak", cursive;
+}
+
+main {
+  flex-grow: 1;
+}
+
+footer {
+  font-family: "Modak", cursive;
+}
+
+.text-light {
+  text-shadow: 1px 1px black;
+}
