@@ -6,6 +6,7 @@ let lps = 0;
 let multiplier = 1;
 let color = "red";
 let goal = 50000;
+let gameActive = false;
 
 var secClock = setInterval(updateGUI, 1000);
 // updates the GUI at the set interval
@@ -93,6 +94,16 @@ let upgrades = {
 
 let activeUpgrades = [];
 
+let redBonusTemplate = /*html*/ `
+  <button id="red-bonus" class="btn btn-button border-0">
+    <img
+    class="rounded-circle bonux1x"
+    onclick="activateBonus1x()"
+    src="img/red-lolli.png"
+    alt=""
+    style="height: 80px; width: 80px;"/>
+  </button>
+  `;
 let blueBonusTemplate = /*html*/ `
   <button id="blue-bonus" class="btn btn-button border-0">
     <img
@@ -126,6 +137,7 @@ let grayBonusTemplate = /*html*/ `
  `;
 
 let bonuses = [
+  { color: "red", multiplier: 1, duration: 20, lps: 1 },
   { color: "blue", multiplier: 2, duration: 12, lps: 50 },
   { color: "green", multiplier: 5, duration: 5, lps: 10 },
   { color: "gray", multiplier: 25, duration: 4, lps: -1000 },
@@ -134,12 +146,14 @@ let bonuses = [
 let bonusActive = false;
 
 function randomNumberGenerator(x) {
-  return Math.floor(Math.random() * x);
+  return Math.ceil(Math.random() * x);
 }
 
 // use the number generator for purchase bonus
 function getRandomPurchaseBonus() {
-  let x = randomNumberGenerator(3);
+  console.log("enter GetRandomPurchaseBonus");
+
+  let x = randomNumberGenerator(bonuses.length) - 1;
   let bonusObj = bonuses[x];
   multiplier = bonusObj.multiplier;
   console.log(multiplier);
@@ -154,7 +168,11 @@ function getRandomPurchaseBonus() {
       />
     `;
   console.log(color);
-  document.getElementById("game-info").innerText = "BONUS TIME!";
+  if (color == "red") {
+    document.getElementById("game-info").innerText = "Keep Lickin'!";
+  } else {
+    document.getElementById("game-info").innerText = "BONUS TIME!";
+  }
   bonusActive = true;
   bonusTimer = setTimeout(function () {
     document.getElementById("main-lolli").innerHTML = /*html*/ `
@@ -173,8 +191,10 @@ function getRandomPurchaseBonus() {
   }, bonusObj.duration * 1000);
   return color;
 }
+
+// bonus clicks to influence lick(num)
 function getRandomLocation() {
-  let x = 1 + randomNumberGenerator(10);
+  let x = randomNumberGenerator(10);
   let location = "location-" + x;
   console.log(color);
 
@@ -194,23 +214,19 @@ function getRandomLocation() {
   }, 2000);
 }
 
-// Starts the bonus activities!
-// function defaultMessage() {
-//   var x = document.getElementById("game-info");
-//   setTimeout(function () {
-//     x.innerText = "Lick Away!";
-//   }, 1000);
-// }
-
 // Inital lick is set to 1 via HTML
 // Bonus to mutliple licks per click
 function lick(num) {
-  if (!document.getElementById("red-lollipop").classList.contains("fa-spin")) {
-    startGameTimer();
-  }
   lollipops += num;
   //console.log(lollipops);
-  document.getElementById("red-lollipop").classList.add("fa-spin");
+  console.log(gameActive);
+
+  if (!gameActive) {
+    document.getElementById("red-lollipop").classList.add("fa-spin");
+    gameActive = true;
+  }
+  console.log(gameActive);
+
   document.getElementById("game-info").innerText = "";
   drawLicks();
   upgradeStatus();
@@ -417,7 +433,7 @@ function updateLPS() {
   console.log(lps);
   return lps;
 }
-
+// Draw the various GUI items when necessary
 function drawLicks() {
   document.getElementById("game-info-1").innerHTML = `<b>${lollipops}</br>`;
   if (lollipops >= goal) {
@@ -476,7 +492,7 @@ function endGame() {
   // @ts-ignore
   document.getElementById("main-lolli").disabled = true;
 }
-
+// There are some questions here!
 function reset() {
   lollipops = 0;
   activeUpgrades.length = 0;
