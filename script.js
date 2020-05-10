@@ -122,9 +122,9 @@ let grayBonusTemplate = /*html*/ `
  `;
 
 let bonuses = [
-  { color: "blue", multiplier: 2, duration: 120, frequency: 30 },
-  { color: "green", multiplier: 5, duration: 60, frequency: 60 },
-  { color: "gray", multiplier: 10, duration: 30, frequency: 120 },
+  { color: "blue", multiplier: 2, duration: 12, lps: 50 },
+  { color: "green", multiplier: 5, duration: 5, lps: 10 },
+  { color: "gray", multiplier: 25, duration: 4, lps: -1000 },
 ];
 
 let bonusActive = false;
@@ -133,8 +133,8 @@ function randomNumberGenerator(x) {
   return Math.floor(Math.random() * x);
 }
 
-// use the number generator to get a bonusObject
-function getRandomBonus() {
+// use the number generator for purchase bonus
+function getRandomPurchaseBonus() {
   let x = randomNumberGenerator(3);
   let bonusObj = bonuses[x];
   multiplier = bonusObj.multiplier;
@@ -150,6 +150,24 @@ function getRandomBonus() {
       />
     `;
   console.log(color);
+  document.getElementById("game-info").innerText = "BONUS TIME!";
+  bonusActive = true;
+  setTimeout(function () {
+    document.getElementById("main-lolli").innerHTML = /*html*/ `
+    <img
+      id="main-lolli"
+      class="fa-spin"
+      src="img/red-lolli.png"
+      alt=""
+      style="height: 200px; width: 200px; user-select: none;"
+      />
+    `;
+    multiplier = 1;
+    console.log(multiplier);
+    document.getElementById("game-info").innerText = "";
+    bonusActive = false;
+    defaultMessage();
+  }, bonusObj.duration * 1000);
   return color;
 }
 function getRandomLocation() {
@@ -174,33 +192,23 @@ function getRandomLocation() {
 }
 
 // Starts the bonus activities!
-function giveBonus() {
+function defaultMessage() {
   var x = document.getElementById("game-info");
   setTimeout(function () {
     x.innerText = "Lick Away!";
   }, 1000);
-
-  // setTimeout(function () {
-  //   y = randomNumberGenerator(3);
-  //   let bonusObj = bonuses[y];
-  //   multiplier = bonusObj.multiplier;
-  //   console.log(bonusObj);
-  //   randomNumberGenerator(10);
-  //   x.innerText = "Bonus Time!";
-  //   randomNumberGenerator(3);
-  // }, y * 1000);
 }
 
 // Inital lick is set to 1 via HTML
 // Bonus to mutliple licks per click
 function lick(num) {
   lollipops += num;
-  console.log(lollipops);
+  //console.log(lollipops);
   document.getElementById("red-lollipop").classList.add("fa-spin");
   document.getElementById("game-info").innerText = "";
   drawLicks();
   upgradeStatus();
-  giveBonus();
+  defaultMessage();
 }
 
 // Enable button once cost is met
@@ -276,7 +284,9 @@ function purchaseUpgradeFriend() {
   addUpgradeFriend();
   upgradeStatus();
   drawPowerUps();
-  getRandomBonus();
+  if (!bonusActive) {
+    getRandomPurchaseBonus();
+  }
 }
 function purchaseUpgradeDog() {
   let cost = 0;
@@ -292,7 +302,9 @@ function purchaseUpgradeDog() {
   addUpgradeDog();
   upgradeStatus();
   drawPowerUps();
-  getRandomBonus();
+  if (!bonusActive) {
+    getRandomPurchaseBonus();
+  }
 }
 function purchaseUpgradeWife() {
   let cost = 0;
@@ -308,7 +320,9 @@ function purchaseUpgradeWife() {
   addUpgradeWife();
   upgradeStatus();
   drawPowerUps();
-  getRandomBonus();
+  if (!bonusActive) {
+    getRandomPurchaseBonus();
+  }
 }
 function purchaseUpgradeHusband() {
   let cost = 0;
@@ -324,7 +338,9 @@ function purchaseUpgradeHusband() {
   addUpgradeHusband();
   upgradeStatus();
   drawPowerUps();
-  getRandomBonus();
+  if (!bonusActive) {
+    getRandomPurchaseBonus();
+  }
 }
 function purchaseUpgradeChild() {
   let cost = 0;
@@ -340,7 +356,9 @@ function purchaseUpgradeChild() {
   addUpgradeChild();
   upgradeStatus();
   drawPowerUps();
-  getRandomBonus();
+  if (!bonusActive) {
+    getRandomPurchaseBonus();
+  }
 }
 
 // Pushes the upgrade into the active array
