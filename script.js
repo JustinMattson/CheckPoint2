@@ -205,7 +205,7 @@ function setRandomLickBonus() {
   let rDuration = tempObj.duration;
   console.log(rColor);
   console.log(rBonus);
-
+  // NOTE line below will randomly throw an error - not sure why.
   document.getElementById(location).innerHTML = /*html*/ `
     <button id="" class="btn btn-button border-0">
       <img
@@ -221,20 +221,23 @@ function setRandomLickBonus() {
     document.getElementById(location).innerHTML = "";
   }, 1500);
 }
+
+// if the bonus button was clicked - lick bonus enabled
+// disable bonus after set time
 function randomLicksButton(value, time) {
   let arg1 = value;
   let arg2 = time;
-  console.log(value);
-  console.log(time);
-
+  console.log("bonus value " + value);
+  console.log("bonus time " + time);
   lickPerClickBonus = value;
-
   setTimeout(function () {
     lickPerClickBonus = 0;
+    clickBonusActive = false;
+    setRandomLickBonus();
     console.log("LickBonusTimeout expired");
   }, time * 1000);
-  setRandomLickBonus();
-  console.log("Button clicked");
+  clickBonusActive = true;
+  console.log("Button clicked clickBonusActive");
 }
 
 // Inital lick is set to 1 via HTML
@@ -247,7 +250,9 @@ function lick(num) {
     start = s.getTime();
     console.log(start);
     gameActive = true;
-    setRandomLickBonus();
+    setTimeout(function () {
+      setRandomLickBonus();
+    }, 5000);
   }
   document.getElementById("game-info").innerText = "";
   drawLicks();
@@ -460,6 +465,14 @@ function drawLicks() {
   }
 }
 function drawLPS() {
+  setTimeout(function () {
+    // TODO fix this timeout logic so the random bonus will respawn.
+    if (!clickBonusActive) {
+      setRandomLickBonus();
+      clickBonusActive = true;
+      console.log("setRandomLickBonus Reactivate");
+    }
+  }, 30000);
   document.getElementById("game-info-2").innerHTML = `<b>${lps}</b>`;
 }
 function drawPowerUps() {
