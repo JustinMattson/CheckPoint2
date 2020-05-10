@@ -15,7 +15,7 @@ function gameClock() {
   upgradeStatus();
 }
 
-let defaultArray = {
+let defaultUpgrades = {
   friend: { type: "friend", qty: 0, lps: 1, cost: 10, next: 0.1 },
   dog: {
     type: "dog",
@@ -118,14 +118,15 @@ function upgradeStatus() {
 // then upgradeStatus()
 function purchaseUpgrade() {
   let cost = 0;
-  let upgrade = upgrades.friend;
-  cost = upgrade.cost;
+  let upgradeObj = upgrades.friend;
+  upgradeObj.qty++;
+  upgradeObj.lps = upgradeObj.qty * defaultUpgrades.friend.lps;
+  cost = upgradeObj.cost;
   lollipops -= cost;
-  upgrade.cost = Math.ceil(upgrade.cost + upgrade.cost * upgrade.next);
-  //upgrades.friend.qty++;
-  //upgrades.friend.lps = upgrades.friend.qty * defaultUpgrades.friend.lps;
-  upgrades.friend = upgrade;
-  defaultArray = defaultArray;
+  upgradeObj.cost = Math.ceil(
+    upgradeObj.cost + upgradeObj.cost * upgradeObj.next
+  );
+  upgrades.friend = upgradeObj;
   addUpgrade();
   upgradeStatus();
   drawPowerUps();
@@ -133,25 +134,25 @@ function purchaseUpgrade() {
 
 // Pushes the upgrade into the active array
 function addUpgrade() {
-  let friend = defaultArray.friend;
+  let friend = defaultUpgrades.friend;
   activeUpgrades.push(friend);
   updateLPS();
 }
 
-function sumUpgrades() {
-  let sum = 0;
-  let friends = activeUpgrades.filter((i) => i.type == "friend");
-  upgrades.friend.qty = friends.length;
-  sum = friends.length;
-  console.log("sum of friends: " + friends);
-}
-
-// Updates the LPS for the items in the active array
 function updateLPS() {
   let sum = 0;
-  activeUpgrades.forEach((a) => (sum += a.lps));
+  activeUpgrades.forEach((i) => (sum += i.lps));
   lps = sum;
+  console.log(lps);
+  return lps;
 }
+
+// // Updates the LPS for the items in the active array
+// function updateLPS() {
+//   let sum = 0;
+//   activeUpgrades.forEach((a) => (sum += a.lps));
+//   lps = sum;
+// }
 
 function drawLicks() {
   document.getElementById("game-info-1").innerHTML = `<b>${lollipops}</br>`;
@@ -184,7 +185,8 @@ function reset() {
     "game-info"
   ).innerHTML = `<span class="text-center" style="font-size: 20pt;">Click Lollipop to Begin!</span>`;
   document.getElementById("btn-friend").classList.add("btn-disabled");
-  upgrades = defaultArray;
+  // TODO learn why this does not work!
+  // upgrades = defaultUpgrades
   drawLicks();
   drawLPS();
   drawPowerUps();
