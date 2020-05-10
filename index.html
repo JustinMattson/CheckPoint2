@@ -14,8 +14,8 @@
     <header class="container-fluid bg-primary text-light">
       <div class="row">
         <div
-          class="col-12 d-flex text-center justify-content-center py-3"
-          style="font-size: 30pt;"
+          class="col-12 d-flex text-center justify-content-center py-2"
+          style="font-size: 24pt;"
         >
           <div class="align-middle">The Lollipop Shop</div>
         </div>
@@ -23,30 +23,14 @@
     </header>
     <main class="container">
       <div class="row d-flex justify-content-between">
-        <div id="location-1" class="col-3 d-flex justify-content-center py-3">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/blue-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          />
-        </div>
+        <div id="location-1" class="col-3 d-flex justify-content-center py-3"></div>
 
-        <div id="game-info" class="col-6 d-flex justify-content-center py-3">
-          <span class="text-center" style="font-size: 20pt;">Click Lollipop to Begin!</span>
+        <div class="col-6 d-flex justify-content-center py-3">
+          <span id="game-info" class="text-center" style="font-size: 20pt;">Click Lollipop to Begin!</span>
               
         </div>
 
-        <div id="location-2" class="col-3 d-flex justify-content-center py-3">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/blue-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          />
-        </div>
+        <div id="location-2" class="col-3 d-flex justify-content-center py-3"></div>
       </div>
       <div class="row">
         <div class="col-4 d-flex flex-column text-center py-3">
@@ -68,37 +52,17 @@
           <p id="game-info-2" ></p>
         </div>
 
-        <div id="location-3" class="col-3 d-flex justify-content-center py-3">
+        <div id="location-3" class="col-3 d-flex justify-content-center py-3"></div>
+        <div class="col-6 d-flex justify-content-center py-3">
           <img
-            class="rounded-circle bonux1000x"
-            onclick=""
-            src="img/gray-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          />
+          class="rounded-circle bonux1000x"
+          onclick=""
+          src="img/stick.png"
+          alt=""
+          style="height: 150px; width:50px; margin-top:-62px; margin-bottom:-20px"
+        />
         </div>
-        <div
-          id="css-stick"
-          class="col-6 d-flex justify-content-center pt-3"
-          style="margin-top: -50px;"
-        >
-          <!-- TODO build a CSS stick -->
-          | |<br />
-          | |<br />
-          | |<br />
-          | |<br />
-          | |<br />
-          | |
-        </div>
-        <div id="location-4" class="col-3 d-flex justify-content-center py-3">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/blue-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          />
-        </div>
+        <div id="location-4" class="col-3 d-flex justify-content-center py-3"></div>
       </div>
 
       <div
@@ -113,17 +77,17 @@
         >
       </div>
      
-      <div class="row d-flex justify-content-between py-3">
-        <div class="col-2 text-center"><b>Power Ups</b></div>
+      <div class="row d-flex justify-content-between text-center px-4 pt-1">
+        <div class="col-2 text-right"><b>Power Ups</b></div>
         
-        <div class="col-2"><button style="height:40px;width:40px;" id="btn-friend" class="btn btn.button p-1 upgrade" onclick="purchaseUpgrade()" disabled="true"><i class="fas fa-user-friends friend"></i></button></div>
-        <div class="col-2"><button style="height:40px;width:40px;" id="btn-dog" class="btn btn.button p-1 upgrade disabled" onclick="addUpgrade(dog)" disabled="true"><i id="dog" class="fas fa-dog    "></i></button></div>
-        <div class="col-2"><button style="height:40px;width:40px;" id="btn-wife" class="btn btn.button p-1 upgrade" onclick="purchase()" disabled="true"><i class="fas fa-female fa-2x   "></i></button></div>
-        <div class="col-2"><button style="height:40px;width:40px;" id="btn-husband" class="btn btn.button p-1 upgrade" onclick="purchase()" disabled="true"><i class="fas fa-male fa-2x   "></i></button></div>
-        <div class="col-2"><button style="height:40px;width:40px;" id="btn-child" class="btn btn.button p-1 upgrade" onclick="purchase()" disabled="true"><i class="fas fa-child   "></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-friend" class="btn btn.button p-1 upgrade" onclick="purchaseUpgradeFriend()" disabled="true"><i class="fas fa-user-friends friend"></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-dog" class="btn btn.button p-1 upgrade" onclick="purchaseUpgradeDog()" disabled="true"><i class="fas fa-dog    "></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-wife" class="btn btn.button p-1 upgrade" onclick="purchaseUpgradeWife()" disabled="true"><i class="fas fa-female fa-2x   "></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-husband" class="btn btn.button p-1 upgrade" onclick="purchaseUpgradeHusband()" disabled="true"><i class="fas fa-male fa-2x   "></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-child" class="btn btn.button p-1 upgrade" onclick="purchaseUpgradeChild()" disabled="true"><i class="fas fa-child   "></i></button></div>
       </div>
       <div class="row d-flex justify-content-between px-4 text-center">
-        <div class="col-2">Cost:</div>
+        <div class="col-2 text-right">Cost:</div>
         <div id="cost-friend" class="col-2"></div>
         <div id="cost-dog" class="col-2"></div>
         <div id="cost-wife" class="col-2"></div>
@@ -131,7 +95,7 @@
         <div id="cost-child" class="col-2"></div>
       </div>
       <div class="row d-flex justify-content-between px-4 text-center">
-        <div class="col-2">Qty:</div>
+        <div class="col-2 text-right">Qty:</div>
         <div id="qty-friend" class="col-2"></div>
         <div id="qty-dog" class="col-2"></div>
         <div id="qty-wife" class="col-2"></div>
@@ -139,7 +103,7 @@
         <div id="qty-child" class="col-2"></div>
       </div>
       <div class="row d-flex justify-content-between px-4 text-center">
-        <div class="col-2">LPS:</div>
+        <div class="col-2 text-right">LPS:</div>
         <div id="lps-friend" class="col-2"></div>
         <div id="lps-dog" class="col-2"></div>
         <div id="lps-wife" class="col-2"></div>
@@ -148,46 +112,13 @@
       </div>
 
        <div class="row d-flex align-middle">
-        <div id="location-7" class="col-2 d-flex justify-content-center py-3">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/blue-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          />
-        </div>
-        <div id="location-8" class="col-2 d-flex justify-content-center py-3">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/blue-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          />
-        </div>
+        <div id="location-7" class="col-2 d-flex justify-content-center py-3"></div>
+        <div id="location-8" class="col-2 d-flex justify-content-center py-3"></div>
         <div id="game-info" class="col-4 text-center">
-          <button class="btn btn-danger text-center" onclick="reset()">RESET</button>
+          <button class="btn btn-danger text-center mt-5" onclick="reset()">RESET</button>
         </div>
-        <div id="location-9" class="col-2 d-flex justify-content-center py-3">
-          <button id="blue-bonus" class="btn btn-button border-0">
-            <img
-            class="rounded-circle bonux10x"
-            onclick="activateBonus()"
-            src="img/blue-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"/>
-          </button>
-        </div>
-        <div id="location-10" class="col-2 d-flex justify-content-center py-3">
-          <button id="green-bonus" class="btn btn-button border-0"><img
-            class="rounded-circle bonux100x"
-            onclick="activateBonus()"
-            src="img/green-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          /></button>
-        </div>
+        <div id="location-9" class="col-2 d-flex justify-content-center py-3"></div>
+        <div id="location-10" class="col-2 d-flex justify-content-center py-3"></div>
         </div>
       </div>
     </main>
