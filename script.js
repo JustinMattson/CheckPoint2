@@ -5,6 +5,7 @@ let lps = 0;
 // bonus multiplier
 let multiplier = 1;
 let color = "red";
+let goal = 50000;
 
 var secClock = setInterval(updateGUI, 1000);
 // updates the GUI at the set interval
@@ -16,6 +17,9 @@ function updateGUI() {
   drawLPS();
   upgradeStatus();
 }
+let bonusTimer = 0;
+let start = 0;
+let end = 0;
 
 let defaultUpgrades = {
   friend: { type: "friend", qty: 0, lps: 1, cost: 10, next: 0.1 },
@@ -152,7 +156,7 @@ function getRandomPurchaseBonus() {
   console.log(color);
   document.getElementById("game-info").innerText = "BONUS TIME!";
   bonusActive = true;
-  setTimeout(function () {
+  bonusTimer = setTimeout(function () {
     document.getElementById("main-lolli").innerHTML = /*html*/ `
     <img
       id="main-lolli"
@@ -166,7 +170,6 @@ function getRandomPurchaseBonus() {
     console.log(multiplier);
     document.getElementById("game-info").innerText = "";
     bonusActive = false;
-    defaultMessage();
   }, bonusObj.duration * 1000);
   return color;
 }
@@ -192,23 +195,40 @@ function getRandomLocation() {
 }
 
 // Starts the bonus activities!
-function defaultMessage() {
-  var x = document.getElementById("game-info");
-  setTimeout(function () {
-    x.innerText = "Lick Away!";
-  }, 1000);
-}
+// function defaultMessage() {
+//   var x = document.getElementById("game-info");
+//   setTimeout(function () {
+//     x.innerText = "Lick Away!";
+//   }, 1000);
+// }
 
 // Inital lick is set to 1 via HTML
 // Bonus to mutliple licks per click
 function lick(num) {
+  if (!document.getElementById("red-lollipop").classList.contains("fa-spin")) {
+    startGameTimer();
+  }
   lollipops += num;
   //console.log(lollipops);
   document.getElementById("red-lollipop").classList.add("fa-spin");
   document.getElementById("game-info").innerText = "";
   drawLicks();
   upgradeStatus();
-  defaultMessage();
+}
+
+function startGameTimer() {
+  if (!document.getElementById("red-lollipop").classList.contains("fa-spin")) {
+    var s = new Date();
+    start = s.getTime();
+    console.log(start);
+  }
+}
+function stopGameTimer() {
+  var e = new Date();
+  end = e.getTime();
+  console.log(end);
+  clearInterval(secClock);
+  endGame();
 }
 
 // Enable button once cost is met
@@ -400,6 +420,10 @@ function updateLPS() {
 
 function drawLicks() {
   document.getElementById("game-info-1").innerHTML = `<b>${lollipops}</br>`;
+  if (lollipops >= goal) {
+    clearTimeout(bonusTimer);
+    stopGameTimer();
+  }
 }
 function drawLPS() {
   document.getElementById("game-info-2").innerHTML = `<b>${lps}</b>`;
@@ -442,17 +466,37 @@ function drawPowerUps() {
   ).innerText = upgrades.child.lps.toString();
 }
 
+// disable buttons
+// calculate duration of game play
+// update results to game-info
+function endGame() {
+  let totalTime = ((end - start) / 1000).toFixed(2).toString();
+  document.getElementById("game-info").innerText = `${goal} in ${totalTime}s!`;
+  lollipops = 0;
+  // @ts-ignore
+  document.getElementById("main-lolli").disabled = true;
+}
+
 function reset() {
   lollipops = 0;
   activeUpgrades.length = 0;
   lps = 0;
-  document.getElementById("red-lollipop").classList.remove("fa-spin");
+  document.getElementById("main-lolli").innerHTML = /*html*/ `
+  <img
+    id="red-lollipop"
+    class=""
+    src="img/red-lolli.png"
+    alt=""
+    style="height: 200px; width: 200px; user-select: none;"
+  />
+  `;
   document.getElementById(
     "game-info"
-  ).innerHTML = `<span class="text-center" style="font-size: 20pt;">Click Lollipop to Begin!</span>`;
-  document.getElementById("btn-friend").classList.add("btn-disabled");
-  // TODO learn why this does not work!
-  // upgrades = defaultUpgrades
+  ).innerHTML = /*html*/ `<div class="text-center" style="font-size: 20pt;">Click Lollipop to Begin!</div>`;
+  // @ts-ignore
+  document.getElementById("main-lolli").disabled = false;
+  // TODO learn how to reset the upgrades Array
+  // upgrades = defaultUpgrades;
   drawLicks();
   drawLPS();
   drawPowerUps();
