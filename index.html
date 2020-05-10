@@ -14,7 +14,7 @@
     <header class="container-fluid bg-primary text-light">
       <div class="row">
         <div
-          class="col-12 d-flex justify-content-center py-3"
+          class="col-12 d-flex text-center justify-content-center py-3"
           style="font-size: 30pt;"
         >
           <div class="align-middle">The Lollipop Shop</div>
@@ -34,7 +34,7 @@
         </div>
 
         <div id="game-info" class="col-6 d-flex justify-content-center py-3">
-          <span class="text-center" style="font-size: 20pt;">Click Lollipop to Begin</span>
+          <span class="text-center" style="font-size: 20pt;">Click Lollipop to Begin!</span>
               
         </div>
 
@@ -49,19 +49,37 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 d-flex justify-content-center py-3">
-          <img
+        <div class="col-4 d-flex flex-column text-center py-3">
+          <p> Total Licks: </p><br>
+          <p id="game-info-1" ></p>
+        </div>
+        <!-- TODO have the red lollipop randomly change colors onClick -->
+        <div class="col-4 d-flex justify-content-center py-3">
+          <button class="btn btn-button border-0" onclick="lick()"><img
             id="red-lollipop"
             class=""
-            onclick="lick()"
             src="img/red-lolli.png"
             alt=""
-            style="height: 200px; width: 200px;"
+            style="height: 200px; width: 200px;user-select: none;"
+          /></button>
+        </div>
+        <div class="col-4 d-flex flex-column text-center py-3">
+          <p> Licks/Second: </p><br>
+          <p id="game-info-2" ></p>
+        </div>
+
+        <div id="location-3" class="col-3 d-flex justify-content-center py-3">
+          <img
+            class="rounded-circle bonux1000x"
+            onclick=""
+            src="img/gray-lolli.png"
+            alt=""
+            style="height: 80px; width: 80px;"
           />
         </div>
         <div
           id="css-stick"
-          class="col-12 d-flex justify-content-center pt-3"
+          class="col-6 d-flex justify-content-center pt-3"
           style="margin-top: -50px;"
         >
           <!-- TODO build a CSS stick -->
@@ -69,7 +87,17 @@
           | |<br />
           | |<br />
           | |<br />
+          | |<br />
           | |
+        </div>
+        <div id="location-4" class="col-3 d-flex justify-content-center py-3">
+          <img
+            class="rounded-circle bonux10x"
+            onclick=""
+            src="img/blue-lolli.png"
+            alt=""
+            style="height: 80px; width: 80px;"
+          />
         </div>
       </div>
 
@@ -84,64 +112,42 @@
           >------- Game Time! ------</span
         >
       </div>
-      <div class="row">
-        <div id="location-3" class="col-3 d-flex justify-content-center">
-          <img
-            id="gray-lollipop"
-            class="rounded-circle p-3 bonus1000x"
-            onclick=""
-            src="img/gray-lolli.png"
-            alt=""
-            style="height: 60px; width: 60px;"
-          />
-        </div>
-        <div id="game-info-1" class="col-6 d-flex justify-content-center py-3">
-          Total Licks
-        </div>
-        <div id="location-4" class="col-3 d-flex justify-content-center py-3">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/blue-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          />
-        </div>
+     
+      <div class="row d-flex justify-content-between py-3">
+        <div class="col-2 text-center"><b>Power Ups</b></div>
+        
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-friend" class="btn btn.button p-1 upgrade" onclick="purchaseUpgrade()" disabled="true"><i class="fas fa-user-friends friend"></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-dog" class="btn btn.button p-1 upgrade disabled" onclick="addUpgrade(dog)" disabled="true"><i id="dog" class="fas fa-dog    "></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-wife" class="btn btn.button p-1 upgrade" onclick="purchase()" disabled="true"><i class="fas fa-female fa-2x   "></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-husband" class="btn btn.button p-1 upgrade" onclick="purchase()" disabled="true"><i class="fas fa-male fa-2x   "></i></button></div>
+        <div class="col-2"><button style="height:40px;width:40px;" id="btn-child" class="btn btn.button p-1 upgrade" onclick="purchase()" disabled="true"><i class="fas fa-child   "></i></button></div>
+      </div>
+      <div class="row d-flex justify-content-between px-4 text-center">
+        <div class="col-2">Cost:</div>
+        <div id="cost-friend" class="col-2"></div>
+        <div id="cost-dog" class="col-2"></div>
+        <div id="cost-wife" class="col-2"></div>
+        <div id="cost-husband" class="col-2"></div>
+        <div id="cost-child" class="col-2"></div>
+      </div>
+      <div class="row d-flex justify-content-between px-4 text-center">
+        <div class="col-2">Qty:</div>
+        <div id="qty-friend" class="col-2"></div>
+        <div id="qty-dog" class="col-2"></div>
+        <div id="qty-wife" class="col-2"></div>
+        <div id="qty-husband" class="col-2"></div>
+        <div id="qty-child" class="col-2"></div>
+      </div>
+      <div class="row d-flex justify-content-between px-4 text-center">
+        <div class="col-2">LPS:</div>
+        <div id="lps-friend" class="col-2"></div>
+        <div id="lps-dog" class="col-2"></div>
+        <div id="lps-wife" class="col-2"></div>
+        <div id="lps-husband" class="col-2"></div>
+        <div id="lps-child" class="col-2"></div>
       </div>
 
-      <div class="row">
-        <div id="location-5" class="col-3 d-flex justify-content-center">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/blue-lolli.png"
-            alt=""
-            style="height: 80px; width: 80px;"
-          />
-        </div>
-        <div id="game-info-2" class="col-6 d-flex justify-content-center py-3">
-          Licks/second
-        </div>
-        <div id="location-6" class="col-3 d-flex justify-content-center">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/green-lolli.png"
-            alt=""
-            style="height: 70px; width: 70px;"
-          />
-        </div>
-      </div>
-
-      <div class="col-12 monospace"><h4>Game Upgrades:</h4>
-        <i class="fas fa-user-friends friend"></i>&nbsp;Friend:
-        <br><i class="fas fa-dog    "></i>&nbsp;Dog:
-        <br><i class="fas fa-female fa-2x   "></i>&nbsp;Wife:
-        <br><i class="fas fa-male fa-2x   "></i>&nbsp;Husband:
-        <br><i class="fas fa-child   "></i>&nbsp;Child:
-      </div>
-
-      <div class="row d-flex align-middle">
+       <div class="row d-flex align-middle">
         <div id="location-7" class="col-2 d-flex justify-content-center py-3">
           <img
             class="rounded-circle bonux10x"
@@ -161,29 +167,31 @@
           />
         </div>
         <div id="game-info" class="col-4 text-center">
-          <div class="btn btn-danger text-center" onclick="reset()">RESET</div>
+          <button class="btn btn-danger text-center" onclick="reset()">RESET</button>
         </div>
         <div id="location-9" class="col-2 d-flex justify-content-center py-3">
-          <img
+          <button id="blue-bonus" class="btn btn-button border-0">
+            <img
             class="rounded-circle bonux10x"
-            onclick=""
+            onclick="activateBonus()"
             src="img/blue-lolli.png"
             alt=""
-            style="height: 80px; width: 80px;"
-          />
+            style="height: 80px; width: 80px;"/>
+          </button>
         </div>
         <div id="location-10" class="col-2 d-flex justify-content-center py-3">
-          <img
-            class="rounded-circle bonux10x"
-            onclick=""
-            src="img/blue-lolli.png"
+          <button id="green-bonus" class="btn btn-button border-0"><img
+            class="rounded-circle bonux100x"
+            onclick="activateBonus()"
+            src="img/green-lolli.png"
             alt=""
             style="height: 80px; width: 80px;"
-          />
+          /></button>
         </div>
         </div>
       </div>
     </main>
+
     <footer class="container-fluid">
       <div class="row">
         <div

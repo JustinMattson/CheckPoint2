@@ -12,9 +12,6 @@ body {
   flex-direction: column;
   min-height: 100vh;
   font-family: "Balsamiq Sans", cursive;
-  //background-image: url("img/candystore.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
 }
 
 header {
@@ -31,4 +28,14 @@ footer {
 
 .text-light {
   text-shadow: 1px 1px black;
+}
+
+.btn:focus,
+.btn:active {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn.upgrade {
+  box-shadow: 1px 1px black;
 }
