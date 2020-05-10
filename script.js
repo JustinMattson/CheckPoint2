@@ -218,27 +218,18 @@ function getRandomLocation() {
 // Bonus to mutliple licks per click
 function lick(num) {
   lollipops += num;
-  //console.log(lollipops);
-  console.log(gameActive);
-
   if (!gameActive) {
     document.getElementById("red-lollipop").classList.add("fa-spin");
+    var s = new Date();
+    start = s.getTime();
+    console.log(start);
     gameActive = true;
   }
-  console.log(gameActive);
-
   document.getElementById("game-info").innerText = "";
   drawLicks();
   upgradeStatus();
 }
 
-function startGameTimer() {
-  if (!document.getElementById("red-lollipop").classList.contains("fa-spin")) {
-    var s = new Date();
-    start = s.getTime();
-    console.log(start);
-  }
-}
 function stopGameTimer() {
   var e = new Date();
   end = e.getTime();
