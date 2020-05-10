@@ -4,8 +4,18 @@ let lollipops = 0;
 let lps = 0;
 // bonus multiplier
 let multiplier = 1;
+let color = "red";
 
-var secClock = setInterval(gameClock, 1000);
+var secClock = setInterval(updateGUI, 1000);
+// updates the GUI at the set interval
+function updateGUI() {
+  if (multiplier > 0) {
+    lollipops += lps * multiplier;
+  }
+  drawLicks();
+  drawLPS();
+  upgradeStatus();
+}
 
 let defaultUpgrades = {
   friend: { type: "friend", qty: 0, lps: 1, cost: 10, next: 0.1 },
@@ -112,9 +122,9 @@ let grayBonusTemplate = /*html*/ `
  `;
 
 let bonuses = [
-  { color: "blue", multiplier: 10, duration: 120, frequency: 30 },
-  { color: "green", multiplier: 100, duration: 60, frequency: 60 },
-  { color: "gray", multiplier: 1000, duration: 30, frequency: 120 },
+  { color: "blue", multiplier: 2, duration: 120, frequency: 30 },
+  { color: "green", multiplier: 5, duration: 60, frequency: 60 },
+  { color: "gray", multiplier: 10, duration: 30, frequency: 120 },
 ];
 
 let bonusActive = false;
@@ -128,43 +138,64 @@ function getRandomBonus() {
   let x = randomNumberGenerator(3);
   let bonusObj = bonuses[x];
   multiplier = bonusObj.multiplier;
-  let color = bonusObj.color;
+  console.log(multiplier);
+  color = bonusObj.color.toString();
+  document.getElementById("main-lolli").innerHTML = /*html*/ `
+    <img
+      id="main-lolli"
+      class="fa-spin"
+      src="img/${color}-lolli.png"
+      alt=""
+      style="height: 200px; width: 200px; user-select: none;"
+      />
+    `;
+  console.log(color);
   return color;
 }
 function getRandomLocation() {
   let x = 1 + randomNumberGenerator(10);
   let location = "location-" + x;
-  document.getElementById(location).innerHTML = blueBonusTemplate;
+  console.log(color);
+
+  document.getElementById(location).innerHTML = /*html*/ `
+    <button id="green-bonus" class="btn btn-button border-0">
+      <img
+      class="rounded-circle bonux100x"
+      onclick="activateBonus100x()"
+      src="img/green-lolli.png"
+      alt=""
+      style="height: 80px; width: 80px;"
+      />
+    </button>
+  `;
+  setTimeout(function () {
+    document.getElementById(location).innerHTML = "";
+  }, 2000);
 }
 
+// Starts the bonus activities!
 function giveBonus() {
   var x = document.getElementById("game-info");
-  var y = 15;
   setTimeout(function () {
-    x.innerText = "Play On!";
+    x.innerText = "Lick Away!";
   }, 1000);
-  setTimeout(function () {
-    y = randomNumberGenerator(3);
-    let bonusObj = bonuses[y];
-    multiplier = bonusObj.multiplier;
-    console.log(bonusObj);
-    randomNumberGenerator(10);
-    x.innerText = "Bonus Time!";
-    randomNumberGenerator(3);
-  }, y * 1000);
+
+  // setTimeout(function () {
+  //   y = randomNumberGenerator(3);
+  //   let bonusObj = bonuses[y];
+  //   multiplier = bonusObj.multiplier;
+  //   console.log(bonusObj);
+  //   randomNumberGenerator(10);
+  //   x.innerText = "Bonus Time!";
+  //   randomNumberGenerator(3);
+  // }, y * 1000);
 }
 
-function gameClock() {
-  if (multiplier > 0) {
-    lollipops += lps * multiplier;
-  }
-  drawLicks();
-  drawLPS();
-  upgradeStatus();
-}
-
-function lick() {
-  lollipops++;
+// Inital lick is set to 1 via HTML
+// Bonus to mutliple licks per click
+function lick(num) {
+  lollipops += num;
+  console.log(lollipops);
   document.getElementById("red-lollipop").classList.add("fa-spin");
   document.getElementById("game-info").innerText = "";
   drawLicks();
@@ -179,41 +210,51 @@ function upgradeStatus() {
   let mod1 = document.getElementById("btn-friend");
   if (upgrades.friend.cost <= lollipops) {
     mod1.classList.add("btn-danger");
+    // @ts-ignore
     mod1.disabled = false;
   } else {
     mod1.classList.remove("btn-danger");
+    // @ts-ignore
     document.getElementById("btn-friend").disabled = true;
   }
   let mod2 = document.getElementById("btn-dog");
   if (upgrades.dog.cost <= lollipops) {
     mod2.classList.add("btn-danger");
+    // @ts-ignore
     mod2.disabled = false;
   } else {
     mod2.classList.remove("btn-danger");
+    // @ts-ignore
     document.getElementById("btn-dog").disabled = true;
   }
   let mod3 = document.getElementById("btn-wife");
   if (upgrades.wife.cost <= lollipops) {
     mod3.classList.add("btn-danger");
+    // @ts-ignore
     mod3.disabled = false;
   } else {
     mod3.classList.remove("btn-danger");
+    // @ts-ignore
     document.getElementById("btn-wife").disabled = true;
   }
   let mod4 = document.getElementById("btn-husband");
   if (upgrades.husband.cost <= lollipops) {
     mod4.classList.add("btn-danger");
+    // @ts-ignore
     mod4.disabled = false;
   } else {
     mod4.classList.remove("btn-danger");
+    // @ts-ignore
     document.getElementById("btn-husband").disabled = true;
   }
   let mod5 = document.getElementById("btn-child");
   if (upgrades.child.cost <= lollipops) {
     mod5.classList.add("btn-danger");
+    // @ts-ignore
     mod5.disabled = false;
   } else {
     mod5.classList.remove("btn-danger");
+    // @ts-ignore
     document.getElementById("btn-child").disabled = true;
   }
 }
@@ -235,6 +276,7 @@ function purchaseUpgradeFriend() {
   addUpgradeFriend();
   upgradeStatus();
   drawPowerUps();
+  getRandomBonus();
 }
 function purchaseUpgradeDog() {
   let cost = 0;
@@ -250,6 +292,7 @@ function purchaseUpgradeDog() {
   addUpgradeDog();
   upgradeStatus();
   drawPowerUps();
+  getRandomBonus();
 }
 function purchaseUpgradeWife() {
   let cost = 0;
@@ -265,6 +308,7 @@ function purchaseUpgradeWife() {
   addUpgradeWife();
   upgradeStatus();
   drawPowerUps();
+  getRandomBonus();
 }
 function purchaseUpgradeHusband() {
   let cost = 0;
@@ -280,6 +324,7 @@ function purchaseUpgradeHusband() {
   addUpgradeHusband();
   upgradeStatus();
   drawPowerUps();
+  getRandomBonus();
 }
 function purchaseUpgradeChild() {
   let cost = 0;
@@ -295,6 +340,7 @@ function purchaseUpgradeChild() {
   addUpgradeChild();
   upgradeStatus();
   drawPowerUps();
+  getRandomBonus();
 }
 
 // Pushes the upgrade into the active array
