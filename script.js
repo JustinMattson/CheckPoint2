@@ -7,6 +7,7 @@ let multiplier = 1;
 let color = "red";
 let goal = 50000;
 let gameActive = false;
+let lickPerClickBonus = 0;
 
 var secClock = setInterval(updateGUI, 1000);
 // updates the GUI at the set interval
@@ -101,7 +102,7 @@ let redBonusTemplate = /*html*/ `
     onclick="activateBonus1x()"
     src="img/red-lolli.png"
     alt=""
-    style="height: 80px; width: 80px;"/>
+    style="height: 70px; width: 70px;"/>
   </button>
   `;
 let blueBonusTemplate = /*html*/ `
@@ -111,7 +112,7 @@ let blueBonusTemplate = /*html*/ `
     onclick="activateBonus10x()"
     src="img/blue-lolli.png"
     alt=""
-    style="height: 80px; width: 80px;"/>
+    style="height: 70px; width: 70px;"/>
   </button>
   `;
 let greenBonusTemplate = /*html*/ `
@@ -121,7 +122,7 @@ let greenBonusTemplate = /*html*/ `
     onclick="activateBonus100x()"
     src="img/green-lolli.png"
     alt=""
-    style="height: 80px; width: 80px;"
+    style="height: 70px; width: 70px;"
     />
   </button>
 `;
@@ -132,18 +133,19 @@ let grayBonusTemplate = /*html*/ `
     onclick="activateBonus1000x()"
     src="img/gray-lolli.png"
     alt=""
-    style="height: 80px; width: 80px;"/>
+    style="height: 70px; width: 70px;"/>
   </button>
  `;
 
 let bonuses = [
-  { color: "red", multiplier: 1, duration: 20, lps: 1 },
-  { color: "blue", multiplier: 2, duration: 12, lps: 50 },
-  { color: "green", multiplier: 5, duration: 5, lps: 10 },
-  { color: "gray", multiplier: 25, duration: 4, lps: -1000 },
+  { color: "red", multiplier: 1, duration: 20, lpClickBonus: 1 },
+  { color: "blue", multiplier: 2, duration: 12, lpClickBonus: 50 },
+  { color: "green", multiplier: 5, duration: 5, lpClickBonus: 10 },
+  { color: "gray", multiplier: 25, duration: 4, lpClickBonus: -1000 },
 ];
 
 let bonusActive = false;
+let clickBonusActive = false;
 
 function randomNumberGenerator(x) {
   return Math.ceil(Math.random() * x);
@@ -193,37 +195,59 @@ function getRandomPurchaseBonus() {
 }
 
 // bonus clicks to influence lick(num)
-function getRandomLocation() {
+function setRandomLickBonus() {
   let x = randomNumberGenerator(10);
   let location = "location-" + x;
-  console.log(color);
+  let y = randomNumberGenerator(bonuses.length) - 1;
+  let tempObj = bonuses[y];
+  let rColor = tempObj.color.toString();
+  let rBonus = tempObj.lpClickBonus;
+  let rDuration = tempObj.duration;
+  console.log(rColor);
+  console.log(rBonus);
 
   document.getElementById(location).innerHTML = /*html*/ `
-    <button id="green-bonus" class="btn btn-button border-0">
+    <button id="" class="btn btn-button border-0">
       <img
-      class="rounded-circle bonux100x"
-      onclick="activateBonus100x()"
-      src="img/green-lolli.png"
+      class=""
+      onclick="randomLicksButton(${rBonus},${rDuration})"
+      src="img/${rColor}-lolli.png"
       alt=""
-      style="height: 80px; width: 80px;"
+      style="height: 70px; width: 70px;"
       />
     </button>
   `;
   setTimeout(function () {
     document.getElementById(location).innerHTML = "";
-  }, 2000);
+  }, 1500);
+}
+function randomLicksButton(value, time) {
+  let arg1 = value;
+  let arg2 = time;
+  console.log(value);
+  console.log(time);
+
+  lickPerClickBonus = value;
+
+  setTimeout(function () {
+    lickPerClickBonus = 0;
+    console.log("LickBonusTimeout expired");
+  }, time * 1000);
+  setRandomLickBonus();
+  console.log("Button clicked");
 }
 
 // Inital lick is set to 1 via HTML
 // Bonus to mutliple licks per click
 function lick(num) {
-  lollipops += num;
+  lollipops += num + lickPerClickBonus;
   if (!gameActive) {
     document.getElementById("red-lollipop").classList.add("fa-spin");
     var s = new Date();
     start = s.getTime();
     console.log(start);
     gameActive = true;
+    setRandomLickBonus();
   }
   document.getElementById("game-info").innerText = "";
   drawLicks();
@@ -431,6 +455,9 @@ function drawLicks() {
     clearTimeout(bonusTimer);
     stopGameTimer();
   }
+  if (lollipops < 0) {
+    lollipops = 0;
+  }
 }
 function drawLPS() {
   document.getElementById("game-info-2").innerHTML = `<b>${lps}</b>`;
@@ -483,7 +510,7 @@ function endGame() {
   // @ts-ignore
   document.getElementById("main-lolli").disabled = true;
 }
-// There are some questions here!
+// I have a question here
 function reset() {
   lollipops = 0;
   activeUpgrades.length = 0;
