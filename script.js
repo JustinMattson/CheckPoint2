@@ -139,7 +139,6 @@ let activeUpgrades = [];
 //   </button>
 //  `;
 
-
 let bonuses = [
   { color: "red", multiplier: 2, duration: 15, lpsClickBonus: 2 },
   { color: "blue", multiplier: 5, duration: 10, lpsClickBonus: 50 },
@@ -174,9 +173,13 @@ function getRandomPurchaseBonus() {
     `;
   ////console.log(color);
   if (color == "red") {
-    document.getElementById("game-info").innerText = `Keep Lickin' ${multiplier}xLPS!`;
+    document.getElementById(
+      "game-info"
+    ).innerText = `Keep Lickin' ${multiplier}xLPS!`;
   } else {
-    document.getElementById("game-info").innerText = `BONUS TIME ${multiplier}xLPS!`;
+    document.getElementById(
+      "game-info"
+    ).innerText = `BONUS TIME: ${multiplier}xLPS!`;
   }
   bonusActive = true;
   bonusTimer = setTimeout(function () {
@@ -250,7 +253,7 @@ function randomLicksButton(time, bonus) {
   setTimeout(function () {
     lickPerClickBonus = 0;
     clickBonusActive = false;
-    document.getElementById("game-info").innerText = ""
+    document.getElementById("game-info").innerText = "";
     startRandomBonus();
     //console.log("LickBonusTimeout expired");
   }, time * 1000);
@@ -259,7 +262,7 @@ function randomLicksButton(time, bonus) {
 
 // Start Game - initially click worth 1 lick
 function lick(num) {
-  lollipops += (num + lickPerClickBonus);
+  lollipops += num + lickPerClickBonus;
   //console.log(num + lickPerClickBonus)
   if (!gameActive) {
     document.getElementById("red-lollipop").classList.add("fa-spin");
