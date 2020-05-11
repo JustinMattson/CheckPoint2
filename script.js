@@ -16,7 +16,6 @@ function updateGUI() {
     lollipops += lps * multiplier;
   }
   drawLicks();
-  drawLPS();
   upgradeStatus();
 }
 let bonusTimer = 0;
@@ -138,10 +137,10 @@ let grayBonusTemplate = /*html*/ `
  `;
 
 let bonuses = [
-  { color: "red", multiplier: 1, duration: 20, lpClickBonus: 1 },
-  { color: "blue", multiplier: 2, duration: 12, lpClickBonus: 50 },
-  { color: "green", multiplier: 5, duration: 5, lpClickBonus: 10 },
-  { color: "gray", multiplier: 25, duration: 4, lpClickBonus: -1000 },
+  { color: "red", multiplier: 1, duration: 20, lpsClickBonus: 1 },
+  { color: "blue", multiplier: 2, duration: 12, lpsClickBonus: 50 },
+  { color: "green", multiplier: 5, duration: 5, lpsClickBonus: 10 },
+  { color: "gray", multiplier: 25, duration: 4, lpsClickBonus: -1000 },
 ];
 
 let bonusActive = false;
@@ -195,64 +194,74 @@ function getRandomPurchaseBonus() {
 }
 
 // bonus clicks to influence lick(num)
-function setRandomLickBonus() {
+// if Lick Bonus is active, skip.
+// generate random variable to determine wait before bonus
+// appears and to establish the location for which it will appear.
+// Show the bonus for 1.5 seconds then disappear.
+function startRandomBonus() {
+  console.log("enter start Random Bonus");
+
+  if (clickBonusActive) {
+    return;
+  }
   let x = randomNumberGenerator(10);
   let location = "location-" + x;
   let y = randomNumberGenerator(bonuses.length) - 1;
   let tempObj = bonuses[y];
   let rColor = tempObj.color.toString();
-  let rBonus = tempObj.lpClickBonus;
   let rDuration = tempObj.duration;
+  let rLpsClickBonus = tempObj.lpsClickBonus;
   console.log(rColor);
-  console.log(rBonus);
+  console.log(rLpsClickBonus);
   // NOTE line below will randomly throw an error - not sure why.
-  document.getElementById(location).innerHTML = /*html*/ `
-    <button id="" class="btn btn-button border-0">
-      <img
-      class=""
-      onclick="randomLicksButton(${rBonus},${rDuration})"
-      src="img/${rColor}-lolli.png"
-      alt=""
-      style="height: 70px; width: 70px;"
-      />
-    </button>
-  `;
   setTimeout(function () {
-    document.getElementById(location).innerHTML = "";
-  }, 1500);
+    document.getElementById(location).innerHTML = /*html*/ `
+      <button id="" class="btn btn-button border-0">
+        <img
+        class=""
+        onclick="randomLicksButton(${rDuration},${rLpsClickBonus})"
+        src="img/${rColor}-lolli.png"
+        alt=""
+        style="height: 70px; width: 70px;"
+        />
+      </button>
+    `;
+    setTimeout(function () {
+      document.getElementById(location).innerHTML = "";
+    }, 1500);
+  }, x * 1000);
 }
 
 // if the bonus button was clicked - lick bonus enabled
 // disable bonus after set time
-function randomLicksButton(value, time) {
-  let arg1 = value;
+function randomLicksButton(time, bonus) {
+  clickBonusActive = true;
   let arg2 = time;
-  console.log("bonus value " + value);
+  let arg3 = bonus;
   console.log("bonus time " + time);
+  console.log("bonus bonus " + bonus);
+
+  document.getElementById("game-info").innerText = `${time}s @ ${bonus}x`;
   lickPerClickBonus = value;
   setTimeout(function () {
     lickPerClickBonus = 0;
     clickBonusActive = false;
-    setRandomLickBonus();
+    startRandomBonus();
     console.log("LickBonusTimeout expired");
   }, time * 1000);
-  clickBonusActive = true;
-  console.log("Button clicked clickBonusActive");
+  console.log("Bonus Button clicked");
 }
 
-// Inital lick is set to 1 via HTML
-// Bonus to mutliple licks per click
+// Start Game - initially click worth 1 lick
+// Start Bonus Licks option!
 function lick(num) {
   lollipops += num + lickPerClickBonus;
-  if (!gameActive) {
+  if (!gameActive && !clickBonusActive) {
     document.getElementById("red-lollipop").classList.add("fa-spin");
     var s = new Date();
     start = s.getTime();
     console.log(start);
     gameActive = true;
-    setTimeout(function () {
-      setRandomLickBonus();
-    }, 5000);
   }
   document.getElementById("game-info").innerText = "";
   drawLicks();
@@ -343,6 +352,7 @@ function purchaseUpgradeFriend() {
   if (!bonusActive) {
     getRandomPurchaseBonus();
   }
+  drawLPS();
 }
 function purchaseUpgradeDog() {
   let cost = 0;
@@ -361,6 +371,7 @@ function purchaseUpgradeDog() {
   if (!bonusActive) {
     getRandomPurchaseBonus();
   }
+  drawLPS();
 }
 function purchaseUpgradeWife() {
   let cost = 0;
@@ -379,6 +390,7 @@ function purchaseUpgradeWife() {
   if (!bonusActive) {
     getRandomPurchaseBonus();
   }
+  drawLPS();
 }
 function purchaseUpgradeHusband() {
   let cost = 0;
@@ -397,6 +409,7 @@ function purchaseUpgradeHusband() {
   if (!bonusActive) {
     getRandomPurchaseBonus();
   }
+  drawLPS();
 }
 function purchaseUpgradeChild() {
   let cost = 0;
@@ -415,6 +428,7 @@ function purchaseUpgradeChild() {
   if (!bonusActive) {
     getRandomPurchaseBonus();
   }
+  drawLPS();
 }
 
 // Pushes the upgrade into the active array
@@ -465,14 +479,14 @@ function drawLicks() {
   }
 }
 function drawLPS() {
+  let rng = randomNumberGenerator(10);
   setTimeout(function () {
     // TODO fix this timeout logic so the random bonus will respawn.
     if (!clickBonusActive) {
-      setRandomLickBonus();
-      clickBonusActive = true;
-      console.log("setRandomLickBonus Reactivate");
+      startRandomBonus();
+      console.log("startRandomBonus Reactivate");
     }
-  }, 30000);
+  }, rng * 1000);
   document.getElementById("game-info-2").innerHTML = `<b>${lps}</b>`;
 }
 function drawPowerUps() {
