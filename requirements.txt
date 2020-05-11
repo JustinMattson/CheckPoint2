@@ -1,0 +1,36 @@
++ Achieved
+/ maybe sort of
+- Not attempted
+
+Visualization:
++ User can click on an image to generate a resource
++ Uers have an up-to-date count of their resources
++ Users have at least 4 upgrades to purchase
++ User can see how many of each resource they have and the eamount of modification that resource provides.
+
+Functionality:
++ At least 1 click upgrade and 1 automatic upgrade
++ Automatic upgrades are applied at least every 3 seconds, and the screen is updated to reflect this change.
++ Users cannot purchase an upgrade if they do not have the resources.
++ Upgrades have different modifier values
++ When a user buys an upgrade, the price of the upgrade goes up.
+
+Stretch Goak Ideas:
+- Instead of a basic count, use images or icons to represent how many of a purchasable the user has
+/ Prevent the user from writing a loop to click by setting a 'cooldown' between clicks
+  + Included setTimeouts to limit the frequency of random bonus and end the purchase bonus options. 
++ Disable the buttons a user cannot purchase and enable them if they have enough money
+/ Unlock/hide upgrades until the user has enough resources at least once to afford the item.
+  + Once enough resources are gained, my button lights up?
+  + Random click bonuses also appear after purchase has been made
+/ Consider how you could add bonuses that could increase the multiplier of automaticUpgrades
+  + I implemented a random purchase bonus with three different results
+- Try using localstorage to save your game progress between page reloads
+- Create a badge system to mark user milestones ex. award "The Collector" for mining 1,000,000!
+  + Instead of never ending, my game has a "goal" and if playing with multiple people, the person with the fastest time to goal wins.
+/ Create a way to decrease the interval of automaticCollection
+  + One of the three random-bonus items will decrease total
+/ Prevent the collection interval from being started more than once
+  + Only one automatic bonus can be active at a time
+  + Only one click bonus can be active at a time
+  / It is possible the two overlap.
