@@ -8,6 +8,9 @@ let color = "red";
 let goal = 50000;
 let gameActive = false;
 let lickPerClickBonus = 0;
+let bonusTimer = 0;
+let start = 0;
+let end = 0;
 
 var secClock = setInterval(updateGUI, 1000);
 // updates the GUI at the set interval
@@ -18,10 +21,9 @@ function updateGUI() {
   drawLicks();
   upgradeStatus();
 }
-let bonusTimer = 0;
-let start = 0;
-let end = 0;
 
+// I would like the reset() to overwrite the purchased upgrades
+// but that doesn't seem to happen, noted in reset()
 let defaultUpgrades = {
   friend: { type: "friend", qty: 0, lps: 1, cost: 10, next: 0.1 },
   dog: {
@@ -53,7 +55,7 @@ let defaultUpgrades = {
     next: 5.0,
   },
 };
-
+// used to sum lps and multipliers after purchases have been made
 let upgrades = {
   friend: {
     type: "friend",
@@ -94,70 +96,72 @@ let upgrades = {
 
 let activeUpgrades = [];
 
-let redBonusTemplate = /*html*/ `
-  <button id="red-bonus" class="btn btn-button border-0">
-    <img
-    class="rounded-circle bonux1x"
-    onclick="activateBonus1x()"
-    src="img/red-lolli.png"
-    alt=""
-    style="height: 70px; width: 70px;"/>
-  </button>
-  `;
-let blueBonusTemplate = /*html*/ `
-  <button id="blue-bonus" class="btn btn-button border-0">
-    <img
-    class="rounded-circle bonux10x"
-    onclick="activateBonus10x()"
-    src="img/blue-lolli.png"
-    alt=""
-    style="height: 70px; width: 70px;"/>
-  </button>
-  `;
-let greenBonusTemplate = /*html*/ `
-  <button id="green-bonus" class="btn btn-button border-0">
-    <img
-    class="rounded-circle bonux100x"
-    onclick="activateBonus100x()"
-    src="img/green-lolli.png"
-    alt=""
-    style="height: 70px; width: 70px;"
-    />
-  </button>
-`;
-let grayBonusTemplate = /*html*/ `
-  <button id="blue-bonus" class="btn btn-button border-0">
-    <img
-    class="rounded-circle bonux1000x"
-    onclick="activateBonus1000x()"
-    src="img/gray-lolli.png"
-    alt=""
-    style="height: 70px; width: 70px;"/>
-  </button>
- `;
+// NOTE Copy paste (save for potential refactor later)
+// let redBonusTemplate = /*html*/ `
+//   <button id="red-bonus" class="btn btn-button border-0">
+//     <img
+//     class="rounded-circle bonux1x"
+//     onclick="activateBonus1x()"
+//     src="img/red-lolli.png"
+//     alt=""
+//     style="height: 70px; width: 70px;"/>
+//   </button>
+//   `;
+// let blueBonusTemplate = /*html*/ `
+//   <button id="blue-bonus" class="btn btn-button border-0">
+//     <img
+//     class="rounded-circle bonux10x"
+//     onclick="activateBonus10x()"
+//     src="img/blue-lolli.png"
+//     alt=""
+//     style="height: 70px; width: 70px;"/>
+//   </button>
+//   `;
+// let greenBonusTemplate = /*html*/ `
+//   <button id="green-bonus" class="btn btn-button border-0">
+//     <img
+//     class="rounded-circle bonux100x"
+//     onclick="activateBonus100x()"
+//     src="img/green-lolli.png"
+//     alt=""
+//     style="height: 70px; width: 70px;"
+//     />
+//   </button>
+// `;
+// let grayBonusTemplate = /*html*/ `
+//   <button id="blue-bonus" class="btn btn-button border-0">
+//     <img
+//     class="rounded-circle bonux1000x"
+//     onclick="activateBonus1000x()"
+//     src="img/gray-lolli.png"
+//     alt=""
+//     style="height: 70px; width: 70px;"/>
+//   </button>
+//  `;
+
 
 let bonuses = [
-  { color: "red", multiplier: 1, duration: 20, lpsClickBonus: 1 },
-  { color: "blue", multiplier: 2, duration: 12, lpsClickBonus: 50 },
-  { color: "green", multiplier: 5, duration: 5, lpsClickBonus: 10 },
-  { color: "gray", multiplier: 25, duration: 4, lpsClickBonus: -1000 },
+  { color: "red", multiplier: 2, duration: 15, lpsClickBonus: 2 },
+  { color: "blue", multiplier: 5, duration: 10, lpsClickBonus: 50 },
+  { color: "green", multiplier: 10, duration: 5, lpsClickBonus: 10 },
+  { color: "gray", multiplier: 25, duration: 3, lpsClickBonus: -1000 },
 ];
 
 let bonusActive = false;
 let clickBonusActive = false;
 
+// used for various random functions throughout
 function randomNumberGenerator(x) {
   return Math.ceil(Math.random() * x);
 }
 
 // use the number generator for purchase bonus
 function getRandomPurchaseBonus() {
-  console.log("enter GetRandomPurchaseBonus");
-
+  //console.log("enter GetRandomPurchaseBonus");
   let x = randomNumberGenerator(bonuses.length) - 1;
   let bonusObj = bonuses[x];
   multiplier = bonusObj.multiplier;
-  console.log(multiplier);
+  ////console.log(multiplier);
   color = bonusObj.color.toString();
   document.getElementById("main-lolli").innerHTML = /*html*/ `
     <img
@@ -168,11 +172,11 @@ function getRandomPurchaseBonus() {
       style="height: 200px; width: 200px; user-select: none;"
       />
     `;
-  console.log(color);
+  ////console.log(color);
   if (color == "red") {
-    document.getElementById("game-info").innerText = "Keep Lickin'!";
+    document.getElementById("game-info").innerText = `Keep Lickin' ${multiplier}xLPS!`;
   } else {
-    document.getElementById("game-info").innerText = "BONUS TIME!";
+    document.getElementById("game-info").innerText = `BONUS TIME ${multiplier}xLPS!`;
   }
   bonusActive = true;
   bonusTimer = setTimeout(function () {
@@ -186,7 +190,7 @@ function getRandomPurchaseBonus() {
       />
     `;
     multiplier = 1;
-    console.log(multiplier);
+    //console.log(multiplier);
     document.getElementById("game-info").innerText = "";
     bonusActive = false;
   }, bonusObj.duration * 1000);
@@ -199,8 +203,7 @@ function getRandomPurchaseBonus() {
 // appears and to establish the location for which it will appear.
 // Show the bonus for 1.5 seconds then disappear.
 function startRandomBonus() {
-  console.log("enter start Random Bonus");
-
+  //console.log("enter start Random Bonus");
   if (clickBonusActive) {
     return;
   }
@@ -211,8 +214,8 @@ function startRandomBonus() {
   let rColor = tempObj.color.toString();
   let rDuration = tempObj.duration;
   let rLpsClickBonus = tempObj.lpsClickBonus;
-  console.log(rColor);
-  console.log(rLpsClickBonus);
+  //console.log(rColor);
+  //console.log(rLpsClickBonus);
   // NOTE line below will randomly throw an error - not sure why.
   setTimeout(function () {
     document.getElementById(location).innerHTML = /*html*/ `
@@ -238,42 +241,37 @@ function randomLicksButton(time, bonus) {
   clickBonusActive = true;
   let arg2 = time;
   let arg3 = bonus;
-  console.log("bonus time " + time);
-  console.log("bonus bonus " + bonus);
+  //console.log("bonus time " + time);
+  //console.log("bonus bonus " + bonus);
 
-  document.getElementById("game-info").innerText = `${time}s @ ${bonus}x`;
-  lickPerClickBonus = value;
+  document.getElementById("game-info").innerText = `Lick Bonus!
+    ${time}s @ ${bonus}x`;
+  lickPerClickBonus = bonus - 1;
   setTimeout(function () {
     lickPerClickBonus = 0;
     clickBonusActive = false;
+    document.getElementById("game-info").innerText = ""
     startRandomBonus();
-    console.log("LickBonusTimeout expired");
+    //console.log("LickBonusTimeout expired");
   }, time * 1000);
-  console.log("Bonus Button clicked");
+  //console.log("Bonus Button clicked");
 }
 
 // Start Game - initially click worth 1 lick
-// Start Bonus Licks option!
 function lick(num) {
-  lollipops += num + lickPerClickBonus;
-  if (!gameActive && !clickBonusActive) {
+  lollipops += (num + lickPerClickBonus);
+  //console.log(num + lickPerClickBonus)
+  if (!gameActive) {
     document.getElementById("red-lollipop").classList.add("fa-spin");
     var s = new Date();
     start = s.getTime();
-    console.log(start);
+    //console.log(start);
     gameActive = true;
+    document.getElementById("game-info").innerText = "";
   }
-  document.getElementById("game-info").innerText = "";
   drawLicks();
+  drawPowerUps();
   upgradeStatus();
-}
-
-function stopGameTimer() {
-  var e = new Date();
-  end = e.getTime();
-  console.log(end);
-  clearInterval(secClock);
-  endGame();
 }
 
 // Enable button once cost is met
@@ -464,7 +462,7 @@ function updateLPS() {
   let sum = 0;
   activeUpgrades.forEach((i) => (sum += i.lps));
   lps = sum;
-  console.log(lps);
+  //console.log(lps);
   return lps;
 }
 // Draw the various GUI items when necessary
@@ -484,7 +482,7 @@ function drawLPS() {
     // TODO fix this timeout logic so the random bonus will respawn.
     if (!clickBonusActive) {
       startRandomBonus();
-      console.log("startRandomBonus Reactivate");
+      //console.log("startRandomBonus Reactivate");
     }
   }, rng * 1000);
   document.getElementById("game-info-2").innerHTML = `<b>${lps}</b>`;
@@ -527,6 +525,14 @@ function drawPowerUps() {
   ).innerText = upgrades.child.lps.toString();
 }
 
+// get the end timestamp and stop the second clock
+function stopGameTimer() {
+  var e = new Date();
+  end = e.getTime();
+  //console.log(end);
+  clearInterval(secClock);
+  endGame();
+}
 // disable buttons
 // calculate duration of game play
 // update results to game-info
@@ -537,7 +543,7 @@ function endGame() {
   // @ts-ignore
   document.getElementById("main-lolli").disabled = true;
 }
-// I have a question here
+// NOTE: I have a question here
 function reset() {
   lollipops = 0;
   activeUpgrades.length = 0;
@@ -562,5 +568,3 @@ function reset() {
   drawLPS();
   drawPowerUps();
 }
-
-reset();
